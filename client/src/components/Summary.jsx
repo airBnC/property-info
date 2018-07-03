@@ -39,25 +39,25 @@ const Summary = props => (
           <SVGContainer>
             <GuestsSVG />
           </SVGContainer>
-          {props.property_features.guests} Guests
+          {props.property_features[0]} Guests
         </Feature>
         <Feature>
           <SVGContainer>
             <BedroomsSVG />
           </SVGContainer>
-          {props.property_features.bedrooms} Bedrooms
+          {props.property_features[1]} Bedrooms
         </Feature>
         <Feature>
           <SVGContainer>
             <BedsSVG />
           </SVGContainer>
-          {props.property_features.beds} Beds
+          {props.property_features[2]} Beds
         </Feature>
         <Feature>
           <SVGContainer>
             <BathsSVG />
           </SVGContainer>
-          {props.property_features.baths} Baths
+          {props.property_features[3]} Baths
         </Feature>
       </Features>
     </Wrapper>
@@ -65,11 +65,11 @@ const Summary = props => (
       direction="column"
     >
       <StyledImage
-        src={props.owner.avatar_url}
+        src={props.owner[1]}
         alt="avatar not found"
       />
       <OwnerName>
-        {props.owner.name}
+        {props.owner[0]}
       </OwnerName>
     </Wrapper>
   </Wrapper>
@@ -79,32 +79,12 @@ Summary.propTypes = {
   home_type: PropTypes.string,
   title: PropTypes.string,
   location: PropTypes.string,
-  owner: PropTypes.shape({
-    name: PropTypes.string,
-    avatar_url: PropTypes.string,
-  }),
-  property_features: PropTypes.shape({
-    guests: PropTypes.number,
-    bedrooms: PropTypes.number,
-    beds: PropTypes.number,
-    baths: PropTypes.number,
-  }),
 };
 
 Summary.defaultProps = {
   home_type: 'PropTypes.string',
   title: 'PropTypes.string',
   location: 'PropTypes.string',
-  owner: {
-    name: 'PropTypes.string',
-    avatar_url: 'PropTypes.string',
-  },
-  property_features: {
-    guests: 'PropTypes.number',
-    bedrooms: 'PropTypes.number',
-    beds: 'PropTypes.number',
-    baths: 'PropTypes.number',
-  },
 };
 
 export default Summary;
