@@ -66,6 +66,7 @@ const renderIcon = (category) => {
 };
 
 const amenitiesCount = (amenities) => {
+  console.log(amenities)
   let count = 0;
   for (let i = 0; i < amenities.length; i += 1) {
     count += amenities[i].category_items.length;

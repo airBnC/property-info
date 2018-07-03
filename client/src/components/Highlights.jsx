@@ -14,7 +14,7 @@ const Highlights = props => (
     </Title>
     <HighlightsWrapper>
       {
-        props.highlights.map(highlight => (
+        props.highlights.map((highlight) => (
           <Highlight
             key={highlight.head}
             highlight={highlight}

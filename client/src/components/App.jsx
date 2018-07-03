@@ -7,7 +7,7 @@ import Highlights from './Highlights';
 import Summary from './Summary';
 import ContactHost from './ContactHost';
 
-const fakeGeneralInfo = JSON.parse('{"id":1,"title":"Practical Fantastic Home","location":"Rosenbaummouth","home_type":"Intelligent HOUSE","owner":{"name":"Pearl","avatar_url":"https://s3.amazonaws.com/uifaces/faces/twitter/falvarad/128.jpg"},"property_features":{"guests":3,"bedrooms":0,"beds":5,"baths":4},"highlights":[{"head":"Indoor fireplace","body":""},{"head":"Self check-in","body":""},{"head":"Great check-in experience","body":""}],"short_description":"Harum perspiciatis minima tempore nobis sed.","more_description":[{"head":"The space","body":"Adipisci reprehenderit repudiandae blanditiis. Dolor assumenda consectetur fuga. Eveniet amet optio quo veniam vel at quas. Nisi et autem et magni dolorem accusamus ipsam eius laborum."},{"head":"Guest access","body":"Labore rerum sed tempore ipsa magnam odio ducimus modi error."}]}');
+const fakeGeneralInfo = JSON.parse('{"id":1,"title":"Practical Fantastic Home","location":"Rosenbaummouth","home_type":"Intelligent HOUSE","owner":["Pearl","https://s3.amazonaws.com/uifaces/faces/twitter/falvarad/128.jpg"],"property_features":[0,3,3,2],"highlights":[{"head":"Indoor fireplace","body":""},{"head":"Self check-in","body":""},{"head":"Great check-in experience","body":""}],"short_description":"Harum perspiciatis minima tempore nobis sed.","more_description":[{"head":"The space","body":"Adipisci reprehenderit repudiandae blanditiis. Dolor assumenda consectetur fuga. Eveniet amet optio quo veniam vel at quas. Nisi et autem et magni dolorem accusamus ipsam eius laborum."},{"head":"Guest access","body":"Labore rerum sed tempore ipsa magnam odio ducimus modi error."}]}');
 const fakeAmenities = JSON.parse('{"id":1,"items":[{"category_head":"Industrial","category_items":[{"amenity_description":"primary","supplemental_description":"Qui ut qui reiciendis omnis id delectus assumenda."},{"amenity_description":"Pa\'anga","supplemental_description":"Optio odio odio."},{"amenity_description":"Customer-focused","supplemental_description":"Vel sed ad optio et eligendi ab."}]},{"category_head":"Industrial2","category_items":[{"amenity_description":"primary","supplemental_description":"Qui ut qui reiciendis omnis id delectus assumenda."},{"amenity_description":"Pa\'anga","supplemental_description":"Optio odio odio."},{"amenity_description":"Customer-focused","supplemental_description":"Vel sed ad optio et eligendi ab."}]}]}');
 
 const Wrapper = styled.div`
@@ -19,7 +19,6 @@ const Wrapper = styled.div`
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.id = window.location.pathname.match(/[0-9]+/) || [1];
     this.state = {
       generalInfo: fakeGeneralInfo,
       amenities: fakeAmenities,
@@ -32,21 +31,50 @@ export default class App extends React.Component {
   }
 
   getGeneralInfo() {
+    let id = document.location.href.slice(28).split('')
+    id.pop()
+    id = id.join('')
     $.ajax({
-      url: `/api/rooms/${this.id[0]}/general`,
+      url: `/api/rooms/${id}/general`,
       type: 'GET',
-      success: data => this.setState({
-        generalInfo: JSON.parse(data),
+      success: ((general) =>  {
+        let generalInfo = JSON.parse(general)
+        console.log(typeof generalInfo)
+        if(typeof generalInfo === 'string') {
+          var data = JSON.parse(generalInfo)
+        } else {
+          var data = generalInfo
+        }
+  
+      
+        let highlightsToChange = data.highlights
+        let highlights = [];
+        for(var i = 0; i < highlightsToChange.length; i += 2) {
+          highlights.push({head:highlightsToChange[i], body:highlightsToChange[i + 1]})
+        }
+        data.highlights = highlights
+        let more_descriptionEdit = data.more_description
+        console.log(more_descriptionEdit)
+        let more_description = [];
+        for(var g = 0; g < more_descriptionEdit.length; g+= 2) {
+          more_description.push({head:more_descriptionEdit[g], body:more_descriptionEdit[g + 1]})
+        }
+        data.more_description = more_description;
+        this.setState({
+        generalInfo: data
+      })
       }),
     });
   }
-
+  
   getAmenities() {
     $.ajax({
-      url: `/api/rooms/${this.id[0]}/amenities`,
+      url: '/api/rooms/amenities',
       type: 'GET',
-      success: data => this.setState({
+      success: (data => {
+        this.setState({
         amenities: JSON.parse(data),
+      })
       }),
     });
   }

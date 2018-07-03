@@ -1,0 +1,15 @@
+config:
+  target: "http://localhost:3003"
+  phases:
+    - duration: 60
+      arrivalRate: 20
+  payload:
+    path: "database-Postgres/ids.csv"
+    fields:
+      - "ids"
+scenarios:
+  - name: "Project Stratosphere - Info Module"
+    flow: 
+    - get:
+      url: "/api/rooms/{{ ids }}/general"
+   
